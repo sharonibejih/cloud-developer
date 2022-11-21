@@ -75,10 +75,10 @@ export class TodosAccess {
     todoId: string,
     userId: string,
     todoUpdate: TodoUpdate
-  ): Promise<TodoUpdate> {
+  ): Promise<any> {
     logger.info('Updating todo item')
 
-    const result = await this.docClient
+    const res = await this.docClient
       .update({
         TableName: this.todosTable,
         Key: {
@@ -101,7 +101,7 @@ export class TodosAccess {
       })
       .promise()
 
-    const attributes = result.Attributes
+    const attributes = res.Attributes
 
     return attributes as TodoUpdate
   }

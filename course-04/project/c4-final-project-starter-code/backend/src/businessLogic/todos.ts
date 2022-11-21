@@ -53,7 +53,7 @@ export async function deleteTodo(todoId, event: APIGatewayProxyEvent): Promise<a
 }
 
 // update todo
-export async function updateTodo(updateTodoRequest: UpdateTodoRequest, todoId: string, event: APIGatewayProxyEvent): Promise<any> {
+export function updateTodo(updateTodoRequest: UpdateTodoRequest, todoId: string, event: APIGatewayProxyEvent): Promise<any> {
     const userId = getUserId(event)
     return todoAccess.updateTodo(todoId, userId, updateTodoRequest)
 }
@@ -62,8 +62,8 @@ export async function updateTodo(updateTodoRequest: UpdateTodoRequest, todoId: s
 //     return getTodoById(todoId)
 // }
 
-export async function getUploadUrl(todoId: string): Promise<any> {
-    return await createAttachmentPresignedUrl(todoId)
+export function getUploadUrl(todoId: string): Promise<string> {
+    return createAttachmentPresignedUrl(todoId)
 }
 
 

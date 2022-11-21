@@ -11,10 +11,10 @@ const s3 = new XAWS.S3({
 })
 
 // TODO: Implement the fileStogare logic
-export function createAttachmentPresignedUrl(todoId: string): Promise<String> {
+export async function createAttachmentPresignedUrl(todoId: string): Promise<string> {
   return s3.getSignedUrl('putObject', {
     Bucket: bucketName,
     Key: todoId,
-    Expires: urlExpiration
+    Expires: +urlExpiration
   })
 }

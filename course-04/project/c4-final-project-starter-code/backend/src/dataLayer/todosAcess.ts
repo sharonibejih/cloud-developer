@@ -75,7 +75,7 @@ export class TodosAccess {
     todoId: string,
     userId: string,
     todoUpdate: TodoUpdate
-  ): Promise<any> {
+  ): Promise<TodoUpdate> {
     logger.info('Updating todo item')
 
     const res = await this.docClient

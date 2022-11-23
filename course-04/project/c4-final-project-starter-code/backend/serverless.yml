@@ -6,12 +6,12 @@ service: c4-serverless-todo-app
 plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
-  - serverless-plugin-tracing
+  - serverless-reqvalidator-plugin
+  - serverless-aws-documentation
 
 provider:
   name: aws
   runtime: nodejs12.x
-  lambdaHashingVersion: '20201221'
 
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
@@ -42,7 +42,7 @@ provider:
           Resource: "*"
 
 custom:
-  topicName: todosTopic-${self:provider.stage}
+  # topicName: todosTopic-${self:provider.stage}
   documentation:
     api:
       info:
@@ -50,19 +50,12 @@ custom:
         title: Serverless Todo App
         description: Serverless application for creating todos
     models:
-      - name: CreateTodo
+      - name: CreateTodoRequest
         contentType: application/json
-        schema: 
-          required:
-            - name
-            - dueDate
-      - name: UpdateTodo
+        schema: ${file(models/create-todo-model.json)}
+      - name: UpdateTodoRequest
         contentType: application/json
-        schema:
-          required:
-            - name
-            - dueDate
-            - done
+        schema: ${file(models/update-todo-model.json)}
 
 functions:
 
@@ -104,10 +97,13 @@ functions:
           path: todos
           cors: true
           authorizer: Auth
-          request:
-            schemas:
-              application/json: ${file(models/create-todo-model.json)}
+          # request:
+          #   schemas:
+          #     application/json: ${file(models/create-todo-model.json)}
           reqValidatorName: RequestBodyValidator
+          documentation:
+            requestModels:
+              application/json: CreateTodoRequest
     iamRoleStatementsName: todo-create-role
     iamRoleStatements:
       - Effect: Allow
@@ -130,10 +126,13 @@ functions:
           path: todos/{todoId}
           cors: true
           authorizer: Auth
-          request:
-            schemas:
-              application/json: ${file(models/update-todo-model.json)}
+          # request:
+          #   schemas:
+          #     application/json: ${file(models/update-todo-model.json)}
           reqValidatorName: RequestBodyValidator
+          documentation:
+            requestModels:
+              application/json: UpdateTodoRequest
     iamRoleStatementsName: todo-update-role
     iamRoleStatements:
       - Effect: Allow
@@ -243,6 +242,7 @@ resources:
               KeyType: RANGE
             Projection:
               ProjectionType: ALL
+
 
     # TODO: Complete the bucket properties below. 
     # Do not forget to add the CorsConfiguration propoerty

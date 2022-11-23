@@ -4,7 +4,7 @@ import { createAttachmentPresignedUrl } from '../helpers/attachmentUtils'
 import { TodoItem } from '../models/TodoItem'
 import { CreateTodoRequest } from '../requests/CreateTodoRequest'
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
-// import { TodoUpdate } from '../models/TodoUpdate';
+import { TodoUpdate } from '../models/TodoUpdate';
 import { createLogger } from '../utils/logger'
 import * as uuid from 'uuid'
 // import * as createError from 'http-errors'
@@ -47,13 +47,13 @@ export async function createTodo(
 }
 
 //  delete todo
-export async function deleteTodo(todoId, event: APIGatewayProxyEvent): Promise<any> {
+export async function deleteTodo(todoId, event: APIGatewayProxyEvent): Promise<string> {
     const userId = getUserId(event)
     return await todoAccess.deleteTodo(todoId, userId)
 }
 
 // update todo
-export function updateTodo(updateTodoRequest: UpdateTodoRequest, todoId: string, event: APIGatewayProxyEvent): Promise<any> {
+export function updateTodo(updateTodoRequest: UpdateTodoRequest, todoId: string, event: APIGatewayProxyEvent): Promise<TodoUpdate> {
     const userId = getUserId(event)
     return todoAccess.updateTodo(todoId, userId, updateTodoRequest)
 }
